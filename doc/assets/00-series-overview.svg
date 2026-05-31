@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="600" viewBox="0 0 1280 600" role="img" aria-labelledby="title desc">
+  <title id="title">DOCA 总体架构图</title>
+  <desc id="desc">业务应用经过 Host 控制面与 DPU 侧代理通信，DPU 侧代理使用 DOCA Flow、DMA、RDMA、SNAP 或 DevEmu，下发到 NIC 或 DPU 硬件快路径，再连接网络、RoCE、NVMe-oF 和后端存储。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 10 0 L 0 5 L 10 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .canvas { fill: #ffffff; }
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 1.6; }
+      .host { fill: #eff6ff; stroke: #2563eb; }
+      .dpu { fill: #ecfdf5; stroke: #059669; }
+      .module { fill: #f0fdf4; stroke: #16a34a; }
+      .hardware { fill: #fff7ed; stroke: #ea580c; }
+      .external { fill: #faf5ff; stroke: #9333ea; }
+      .storage { fill: #fefce8; stroke: #ca8a04; }
+      .text { fill: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; font-size: 17px; font-weight: 600; text-anchor: middle; }
+      .subtext { fill: #475569; font-size: 14px; font-weight: 500; }
+      .label { fill: #334155; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; font-size: 13px; font-weight: 600; text-anchor: middle; }
+      .edge { fill: none; stroke: #475569; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect class="canvas" width="1280" height="600" rx="18"/>
+
+  <rect class="box host" x="45" y="84" width="170" height="76" rx="10"/>
+  <text class="text" x="130" y="116">
+    <tspan x="130" dy="0">业务应用</tspan>
+    <tspan class="subtext" x="130" dy="23">Host CPU</tspan>
+  </text>
+
+  <rect class="box host" x="285" y="84" width="170" height="76" rx="10"/>
+  <text class="text" x="370" y="129">Host 控制面</text>
+
+  <rect class="box dpu" x="610" y="72" width="210" height="100" rx="10"/>
+  <text class="text" x="715" y="112">
+    <tspan x="715" dy="0">DPU 侧代理/控制面</tspan>
+    <tspan class="subtext" x="715" dy="24">ARM CPU</tspan>
+  </text>
+
+  <rect class="box module" x="545" y="220" width="200" height="58" rx="10"/>
+  <text class="text" x="645" y="243">
+    <tspan x="645" dy="0">DOCA Flow</tspan>
+    <tspan class="subtext" x="645" dy="22">规则下发</tspan>
+  </text>
+
+  <rect class="box module" x="545" y="300" width="200" height="58" rx="10"/>
+  <text class="text" x="645" y="323">
+    <tspan x="645" dy="0">DOCA DMA</tspan>
+    <tspan class="subtext" x="645" dy="22">内存搬运任务</tspan>
+  </text>
+
+  <rect class="box module" x="545" y="380" width="200" height="58" rx="10"/>
+  <text class="text" x="645" y="403">
+    <tspan x="645" dy="0">DOCA RDMA</tspan>
+    <tspan class="subtext" x="645" dy="22">远端内存任务</tspan>
+  </text>
+
+  <rect class="box module" x="545" y="460" width="200" height="58" rx="10"/>
+  <text class="text" x="645" y="483">
+    <tspan x="645" dy="0">SNAP / DevEmu</tspan>
+    <tspan class="subtext" x="645" dy="22">存储与设备仿真</tspan>
+  </text>
+
+  <rect class="box hardware" x="845" y="335" width="200" height="95" rx="10"/>
+  <text class="text" x="945" y="373">
+    <tspan x="945" dy="0">NIC/DPU 硬件</tspan>
+    <tspan class="subtext" x="945" dy="24">快路径</tspan>
+  </text>
+
+  <rect class="box external" x="1115" y="260" width="120" height="76" rx="10"/>
+  <text class="text" x="1175" y="291">
+    <tspan x="1175" dy="0">网络</tspan>
+    <tspan class="subtext" x="1175" dy="22">RoCE / NVMe-oF</tspan>
+  </text>
+
+  <rect class="box storage" x="1115" y="430" width="120" height="76" rx="10"/>
+  <text class="text" x="1175" y="475">后端存储</text>
+
+  <path class="edge" d="M 215 122 L 285 122" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 455 122 L 610 122" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+  <rect x="456" y="56" width="153" height="24" rx="12" fill="#ffffff"/>
+  <text class="label" x="532.5" y="73">Comch / RPC / socket</text>
+
+  <path class="edge" d="M 715 172 C 715 195 584 195 520 210"/>
+  <path class="edge" d="M 520 210 L 520 489"/>
+  <path class="edge" d="M 520 249 L 545 249" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 520 329 L 545 329" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 520 409 L 545 409" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 520 489 L 545 489" marker-end="url(#arrow)"/>
+
+  <path class="edge" d="M 745 249 C 795 249 790 350 845 350" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 745 329 C 795 329 800 374 845 374" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 745 409 C 795 409 800 398 845 398" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 745 489 C 800 489 792 422 845 422" marker-end="url(#arrow)"/>
+
+  <path class="edge" d="M 1045 360 C 1080 340 1092 308 1115 298" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+  <path class="edge" d="M 1045 410 C 1080 425 1092 452 1115 468" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+</svg>

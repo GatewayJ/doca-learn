@@ -10,79 +10,17 @@
 
 ## 2. 总体架构
 
-```mermaid
-flowchart TB
-    subgraph Host[Host]
-        App[App / DB / FileSystem]
-        Driver[Standard NVMe/virtio Driver]
-        HostCtrl[Host Control Client]
-    end
-
-    subgraph DPU[DPU]
-        Comch[DPU Comch Server]
-        Agent[Storage/Network Agent]
-        SNAP[SNAP / DevEmu]
-        Flow[DOCA Flow Pipeline]
-        DMA[DOCA DMA]
-        RDMA[DOCA RDMA / NVMe-oF]
-        Telemetry[Telemetry / Counters]
-    end
-
-    subgraph Remote[Remote Storage Cluster]
-        Target[RDMA/NVMe-oF Target]
-        Disk[Storage Backend]
-    end
-
-    App --> Driver --> SNAP
-    HostCtrl <-->|Comch| Comch
-    Comch --> Agent
-    Agent --> SNAP
-    Agent --> Flow
-    Agent --> DMA
-    Agent --> RDMA
-    Agent --> Telemetry
-    SNAP <-->|Host buffer access| DMA
-    RDMA <-->|RoCE| Target --> Disk
-    Flow --> RDMA
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 1](assets/12-end-to-end-rdma-flow-storage-design-fig-01.svg)
 
 ## 3. 控制面流程
 
 ### 3.1 初始化
 
-```mermaid
-sequenceDiagram
-    participant Ctrl as Host Control Client
-    participant Agent as DPU Agent
-    participant Caps as doca_caps / capability APIs
-    participant SNAP as SNAP Service
-    participant Flow as DOCA Flow
-    participant RDMA as DOCA RDMA
-
-    Agent->>Caps: discover devices/libs/capabilities
-    Agent->>SNAP: prepare emulation service
-    Agent->>Flow: init ports/pipes
-    Agent->>RDMA: prepare RDMA context pool
-    Ctrl->>Agent: HELLO(version, tenant)
-    Agent-->>Ctrl: OK(capability summary)
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 2](assets/12-end-to-end-rdma-flow-storage-design-fig-02.svg)
 
 ### 3.2 创建虚拟卷
 
-```mermaid
-sequenceDiagram
-    participant Ctrl as Host Control Client
-    participant Agent as DPU Agent
-    participant SNAP as SNAP
-    participant Flow as Flow
-    participant Backend as Remote Backend
-
-    Ctrl->>Agent: CREATE_VOLUME(size, tenant, qos, backend)
-    Agent->>Backend: connect/check backend
-    Agent->>SNAP: create controller/namespace mapping
-    Agent->>Flow: install storage traffic steering rules
-    Agent-->>Ctrl: volume_id/device info
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 3](assets/12-end-to-end-rdma-flow-storage-design-fig-03.svg)
 
 ### 3.3 删除/恢复
 
@@ -100,52 +38,11 @@ sequenceDiagram
 
 ### 4.1 写路径
 
-```mermaid
-sequenceDiagram
-    participant App as Host App
-    participant Driver as NVMe/virtio Driver
-    participant SNAP as DPU SNAP
-    participant DMA as DOCA DMA
-    participant Agent as DPU Agent
-    participant RDMA as DOCA RDMA
-    participant Target as Remote Target
-
-    App->>Driver: write(block, data)
-    Driver->>SNAP: submit IO command
-    SNAP->>Agent: dispatch write
-    Agent->>DMA: access/copy Host buffer if needed
-    DMA-->>Agent: DMA completion
-    Agent->>RDMA: RDMA write / NVMe-oF write
-    RDMA->>Target: transfer over RoCE
-    Target-->>RDMA: completion
-    Agent-->>SNAP: complete IO
-    SNAP-->>Driver: command completion
-    Driver-->>App: write done
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 4](assets/12-end-to-end-rdma-flow-storage-design-fig-04.svg)
 
 ### 4.2 读路径
 
-```mermaid
-sequenceDiagram
-    participant App as Host App
-    participant Driver as NVMe/virtio Driver
-    participant SNAP as DPU SNAP
-    participant Agent as DPU Agent
-    participant RDMA as DOCA RDMA
-    participant Target as Remote Target
-    participant DMA as DOCA DMA
-
-    App->>Driver: read(block)
-    Driver->>SNAP: submit IO command
-    SNAP->>Agent: dispatch read
-    Agent->>RDMA: RDMA read / NVMe-oF read from backend
-    Target-->>RDMA: data returned
-    Agent->>DMA: place data into Host buffer if needed
-    DMA-->>Agent: DMA completion
-    Agent-->>SNAP: complete IO
-    SNAP-->>Driver: command completion
-    Driver-->>App: read data
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 5](assets/12-end-to-end-rdma-flow-storage-design-fig-05.svg)
 
 ## 5. Flow 在这个设计中做什么
 
@@ -160,14 +57,7 @@ Flow 不直接理解“文件”或“块设备”，它负责网络 steering �
 
 示意：
 
-```mermaid
-flowchart LR
-    In[Storage Network Traffic] --> Tenant[match tenant/VLAN/IP]
-    Tenant --> Backend[match backend/port/protocol]
-    Backend -->|allowed| Queue[forward to RDMA queue]
-    Backend -->|denied| Drop[drop + counter]
-    Queue --> Count[bytes/packets counter]
-```
+![12. 综合设计：Comch + Flow + DMA/RDMA + Storage 原型 图 6](assets/12-end-to-end-rdma-flow-storage-design-fig-06.svg)
 
 ## 6. Comch 在这个设计中做什么
 

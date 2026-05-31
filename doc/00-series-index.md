@@ -28,21 +28,7 @@ DOCA 可以粗略理解为：
 
 它不是单个库，而是一组面向网络、存储、安全、遥测、内存搬运、RDMA、设备仿真和硬件卸载的 SDK、Runtime、服务、工具与参考应用。
 
-```mermaid
-flowchart LR
-    App[业务应用<br/>Host CPU] --> HostCP[Host 控制面]
-    HostCP <-->|Comch / RPC / socket| DPUAgent[DPU 侧代理/控制面<br/>ARM CPU]
-    DPUAgent --> Flow[DOCA Flow<br/>规则下发]
-    DPUAgent --> DMA[DOCA DMA<br/>内存搬运任务]
-    DPUAgent --> RDMA[DOCA RDMA<br/>远端内存任务]
-    DPUAgent --> SNAP[SNAP / DevEmu<br/>存储与设备仿真]
-    Flow --> HW[NIC/DPU 硬件快路径]
-    DMA --> HW
-    RDMA --> HW
-    SNAP --> HW
-    HW <--> Net[网络 / RoCE / NVMe-oF]
-    HW <--> Storage[后端存储]
-```
+![DOCA 总体架构图](assets/00-series-overview.svg)
 
 最重要的认知：DOCA 不是“完全不用 CPU”。典型分工是：
 

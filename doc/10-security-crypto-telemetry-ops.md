@@ -14,14 +14,7 @@ DPU/SuperNIC 位于 Host 与网络/存储之间，是天然的基础设施边界
 - DPU agent 独立采集 VM/进程/网络行为；
 - 控制面请求需要权限校验和审计。
 
-```mermaid
-flowchart LR
-    Net[Network] --> DPU[DPU Security Boundary]
-    DPU -->|allowed| Host[Host Workload]
-    DPU -->|deny/mirror/log| Sec[Security Service]
-    Controller[Policy Controller] --> DPU
-    DPU --> Telemetry[Telemetry / Audit]
-```
+![10. 安全、加密、遥测与运维工具 图 1](assets/10-security-crypto-telemetry-ops-fig-01.svg)
 
 ## 3. DOCA App Shield
 
@@ -55,23 +48,11 @@ DOCA 文档中可见的相关库包括：
 
 ### 5.1 网络方向
 
-```mermaid
-flowchart LR
-    PacketIn[Packet In] --> Flow[Flow classify]
-    Flow --> Crypto[Crypto/IPsec/TLS-like service<br/>视具体能力]
-    Crypto --> Forward[Forward]
-    Flow --> Drop[Drop invalid]
-```
+![10. 安全、加密、遥测与运维工具 图 2](assets/10-security-crypto-telemetry-ops-fig-02.svg)
 
 ### 5.2 存储方向
 
-```mermaid
-flowchart LR
-    HostIO[Host IO] --> SNAP[DPU SNAP]
-    SNAP --> Encrypt[Encrypt/Decrypt]
-    Encrypt --> Compress[Optional Compress]
-    Compress --> Backend[Remote/Local Backend]
-```
+![10. 安全、加密、遥测与运维工具 图 3](assets/10-security-crypto-telemetry-ops-fig-03.svg)
 
 关键设计点：
 

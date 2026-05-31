@@ -23,17 +23,7 @@ DOCA DMA 提供在 DOCA buffers 之间复制数据的 API，并尽量使用硬�
 
 ## 3. 基本对象
 
-```mermaid
-flowchart LR
-    SrcMem[Source Memory] --> SrcMmap[doca_mmap]
-    DstMem[Destination Memory] --> DstMmap[doca_mmap]
-    SrcMmap --> SrcBuf[doca_buf src]
-    DstMmap --> DstBuf[doca_buf dst]
-    SrcBuf --> Task[doca_dma_task_memcpy]
-    DstBuf --> Task
-    Task --> PE[doca_pe_progress]
-    PE --> Done[Completion Callback]
-```
+![07. DOCA DMA：内存搬运模型 图 1](assets/07-doca-dma-memory-movement-fig-01.svg)
 
 ## 4. 典型 API/能力点
 
@@ -53,27 +43,7 @@ flowchart LR
 
 ## 5. 标准流程
 
-```mermaid
-sequenceDiagram
-    participant App as App CPU
-    participant Core as DOCA Core
-    participant DMA as DOCA DMA
-    participant HW as DMA Engine
-    participant PE as Progress Engine
-
-    App->>Core: 查找 device/devinfo
-    App->>DMA: capability query
-    App->>DMA: create doca_dma + set callbacks
-    App->>Core: create PE + connect ctx
-    App->>Core: create mmap/register memory
-    App->>Core: create doca_buf src/dst
-    App->>DMA: allocate memcpy task
-    App->>DMA: submit task
-    DMA->>HW: enqueue copy
-    App->>PE: doca_pe_progress loop
-    HW-->>PE: completion
-    PE-->>App: success/error callback
-```
+![07. DOCA DMA：内存搬运模型 图 2](assets/07-doca-dma-memory-movement-fig-02.svg)
 
 ## 6. Host↔DPU 内存搬运
 
@@ -87,13 +57,7 @@ Host 与 DPU 之间搬运数据时，通常涉及：
 
 简化示意：
 
-```mermaid
-flowchart LR
-    HostMem[Host Memory<br/>registered/exported] <-->|PCIe DMA| DPUHW[DPU DMA Engine]
-    DPUHW <--> DPUMem[DPU Memory<br/>registered]
-    DPUApp[DPU App] -->|submit DMA task| DPUHW
-    HostApp[Host App] -->|control metadata via Comch| DPUApp
-```
+![07. DOCA DMA：内存搬运模型 图 3](assets/07-doca-dma-memory-movement-fig-03.svg)
 
 ## 7. DMA 与 RDMA 的区别
 

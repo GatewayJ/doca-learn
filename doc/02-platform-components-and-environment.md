@@ -4,30 +4,7 @@
 
 DOCA 不是一个单独二进制或单个库。实际系统通常由以下部分组成：
 
-```mermaid
-flowchart TB
-    subgraph Host[Host 服务器]
-        HostOS[Linux / Hypervisor]
-        App[业务应用 / VM / Container]
-        HostDriver[NVIDIA 驱动 / DOCA-OFED / RDMA core]
-        HostDoca[Host 侧 DOCA 应用/库]
-    end
-
-    subgraph DPU[BlueField DPU / SuperNIC]
-        DPUOS[DPU OS / Linux on ARM]
-        DPUDriver[固件 / 驱动 / Runtime]
-        DocaSvc[DOCA Services<br/>SNAP/Telemetry/Flow Inspector/...]
-        DocaApp[DPU 侧 DOCA App / Agent]
-        HW[硬件加速引擎<br/>NIC pipeline / DMA / RDMA / crypto]
-    end
-
-    HostDoca <-->|Comch / PCIe / RDMA CM / socket| DocaApp
-    App --> HostDriver
-    HostDriver <--> HW
-    DocaApp --> DocaSvc
-    DocaApp --> HW
-    HW <--> Network[Ethernet / RoCE / NVMe-oF]
-```
+![02. 平台组成与运行环境 图 1](assets/02-platform-components-and-environment-fig-01.svg)
 
 ## 2. 硬件层
 

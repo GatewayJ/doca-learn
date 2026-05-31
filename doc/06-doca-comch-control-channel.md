@@ -13,22 +13,7 @@ Comch 本身不是“硬件快路径”。它更像 Host 和 DPU 之间的 RPC/�
 
 ## 2. 典型结构
 
-```mermaid
-sequenceDiagram
-    participant Host as Host Comch Client
-    participant Channel as DOCA Comch
-    participant DPU as DPU Comch Server / Agent
-    participant Flow as DOCA Flow
-    participant DMA as DOCA DMA/RDMA
-
-    Host->>Channel: connect(service name)
-    Channel->>DPU: new connection event
-    Host->>DPU: create_resource(req)
-    DPU->>Flow: install flow rules
-    DPU->>DMA: prepare memory/data movement resources
-    DPU-->>Host: create_resource(resp)
-    Host->>DPU: update/delete/query
-```
+![06. DOCA Comch：Host↔DPU 控制通道 图 1](assets/06-doca-comch-control-channel-fig-01.svg)
 
 ## 3. Comch 在系统中的位置
 
@@ -52,17 +37,7 @@ DOCA Comch 官方文档中包含 server/client/consumer/producer 等对象与初
 - server 处理 connection status changed event；
 - 退出时断开连接并清理 ctx/PE/资源。
 
-```mermaid
-stateDiagram-v2
-    [*] --> ServerCreate
-    ServerCreate --> ServerConfig: 设置设备/service/callback
-    ServerConfig --> ServerStart: doca_ctx_start
-    ServerStart --> Running: 等待 client connection
-    Running --> HandleMsg: 收到 control message
-    HandleMsg --> Running: 返回 response
-    Running --> Stop: disconnect / error / shutdown
-    Stop --> [*]
-```
+![06. DOCA Comch：Host↔DPU 控制通道 图 2](assets/06-doca-comch-control-channel-fig-02.svg)
 
 ## 5. 消息设计
 
@@ -95,21 +70,7 @@ struct request_header {
 
 RDMA 本身需要交换连接信息和内存描述符。Comch 可以承担这个控制通道：
 
-```mermaid
-sequenceDiagram
-    participant Host as Host App
-    participant DPU as DPU Agent
-    participant RDMA as DOCA RDMA
-
-    Host->>DPU: HELLO / version / capability
-    DPU-->>Host: OK / capability
-    Host->>Host: register local memory
-    DPU->>DPU: register/export DPU or remote memory
-    Host->>DPU: send local RDMA info / request remote descriptor
-    DPU-->>Host: send remote descriptor / connection info
-    Host->>RDMA: connect + submit read/write task
-    RDMA-->>Host: completion
-```
+![06. DOCA Comch：Host↔DPU 控制通道 图 3](assets/06-doca-comch-control-channel-fig-03.svg)
 
 重点：
 
@@ -121,22 +82,7 @@ sequenceDiagram
 
 Host 控制程序想动态创建网络规则时：
 
-```mermaid
-sequenceDiagram
-    participant Controller as Host Controller
-    participant Agent as DPU Agent
-    participant Flow as DOCA Flow
-    participant HW as Hardware Pipeline
-
-    Controller->>Agent: CREATE_FLOW tenant=42 allow tcp/443
-    Agent->>Agent: validate request
-    Agent->>Flow: add pipe entry
-    Flow->>HW: program rule
-    Agent-->>Controller: OK entry_id=1001
-    Controller->>Agent: QUERY_STATS entry_id=1001
-    Agent->>Flow: query counter
-    Agent-->>Controller: packets/bytes
-```
+![06. DOCA Comch：Host↔DPU 控制通道 图 4](assets/06-doca-comch-control-channel-fig-04.svg)
 
 ## 8. 安全注意事项
 

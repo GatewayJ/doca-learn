@@ -41,16 +41,7 @@ DOCA 是 NVIDIA 面向 BlueField DPU / SuperNIC 的数据中心基础设施软�
 
 DOCA Flow 可以把大量 match-action 规则下发到 NIC/DPU 硬件，使常见包处理走硬件 fast path；DPU ARM 负责规则安装、慢路径和控制面。
 
-```mermaid
-flowchart LR
-    VM1[VM / Container A] --> RepA[Representor]
-    VM2[VM / Container B] --> RepB[Representor]
-    RepA --> Pipeline[DOCA Flow Pipeline<br/>match/action/count/forward]
-    RepB --> Pipeline
-    Pipeline --> Uplink[Physical Uplink]
-    Controller[Cloud Controller] --> Agent[DPU Agent]
-    Agent -->|install/update rules| Pipeline
-```
+![01. DOCA 是什么与应用场景 图 1](assets/01-what-is-doca-and-use-cases-fig-01.svg)
 
 ### 3.2 安全隔离与服务插入
 

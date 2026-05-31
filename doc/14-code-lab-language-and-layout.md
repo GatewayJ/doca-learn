@@ -316,15 +316,7 @@ Rust/Go 不建议一开始直接绑定 DOCA C API，但适合做外围控制面�
 
 推荐架构：
 
-```mermaid
-flowchart LR
-    UI[CLI / REST / gRPC<br/>Go/Rust/Python] --> Ctrl[Control Service]
-    Ctrl -->|socket/gRPC/Comch command| DocaProc[C DOCA Data-plane Process]
-    DocaProc --> Flow[DOCA Flow]
-    DocaProc --> DMA[DOCA DMA]
-    DocaProc --> RDMA[DOCA RDMA]
-    Ctrl --> Metrics[Telemetry / Prometheus / CSV]
-```
+![14. DOCA 代码实验语言选择与项目布局 图 1](assets/14-code-lab-language-and-layout-fig-01.svg)
 
 这种模式下：
 

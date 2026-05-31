@@ -14,17 +14,7 @@ DOCA Flow 是用于编程 DPU/NIC 网络数据面的库。它把网络处理抽�
 
 ## 2. 基本心智模型
 
-```mermaid
-flowchart LR
-    In[Packet In] --> Port[DOCA Flow Port]
-    Port --> Pipe1[Pipe 1<br/>L2/L3/L4 match]
-    Pipe1 -->|hit| Act1[Action<br/>count/modify]
-    Act1 --> Fwd1[Forward<br/>next pipe / queue / port]
-    Pipe1 -->|miss| Miss[Miss action<br/>drop / RSS / slow path]
-    Fwd1 --> Pipe2[Pipe 2<br/>ACL / tunnel / tenant]
-    Pipe2 -->|hit| Out[Uplink / Representor / Hairpin]
-    Pipe2 -->|miss| Slow[Software slow path]
-```
+![05. DOCA Flow：网络数据面与硬件转发管线 图 1](assets/05-doca-flow-network-datapath-fig-01.svg)
 
 ## 3. Flow 与传统软件网络栈的区别
 
@@ -52,34 +42,13 @@ flowchart LR
 
 ## 5. Flow 生命周期
 
-```mermaid
-sequenceDiagram
-    participant App as DOCA Flow App
-    participant Flow as DOCA Flow Library
-    participant HW as DPU/NIC Hardware
-
-    App->>Flow: init DOCA Flow
-    App->>Flow: create/start ports
-    App->>Flow: create pipe template
-    App->>Flow: add pipe entries
-    Flow->>HW: program hardware steering tables
-    App->>Flow: query counter / handle aging / update entry
-    App->>Flow: remove entries / destroy pipe
-    Flow->>HW: teardown hardware resources
-    App->>Flow: stop ports / destroy
-```
+![05. DOCA Flow：网络数据面与硬件转发管线 图 2](assets/05-doca-flow-network-datapath-fig-02.svg)
 
 ## 6. 应用场景示例
 
 ### 6.1 安全组/ACL
 
-```mermaid
-flowchart LR
-    Packet --> ACL[ACL Pipe<br/>tenant + src/dst/ip/port]
-    ACL -->|allow| Next[Next Pipe]
-    ACL -->|deny| Drop[Drop]
-    ACL --> Count[Counter]
-```
+![05. DOCA Flow：网络数据面与硬件转发管线 图 3](assets/05-doca-flow-network-datapath-fig-03.svg)
 
 ### 6.2 隧道封装/解封装
 
@@ -100,13 +69,7 @@ Flow CT 可用于 connection tracking 相关场景。服务链可把流量转给
 
 在 DPU/虚拟化模式下，representor 是理解流量路径的关键。
 
-```mermaid
-flowchart LR
-    VF[VF/SF from Host/VM] --> Rep[Representor on DPU]
-    Rep --> Flow[DOCA Flow Pipeline]
-    Flow --> Uplink[Physical Uplink]
-    Uplink --> Network[External Network]
-```
+![05. DOCA Flow：网络数据面与硬件转发管线 图 4](assets/05-doca-flow-network-datapath-fig-04.svg)
 
 DPU agent 通常通过 representor 感知和控制 Host/VF/SF 的流量。
 
@@ -149,16 +112,7 @@ Flow 不是无限灵活的通用程序执行环境，它受硬件 steering 能�
 
 设计：
 
-```mermaid
-flowchart TD
-    In[VM Representor] --> Tenant[Pipe: match tenant/VF]
-    Tenant --> SrcCheck[Pipe: match src IP/MAC]
-    SrcCheck -->|valid| ACL[Pipe: dst IP/port ACL]
-    SrcCheck -->|invalid| Drop1[Drop + counter]
-    ACL -->|allow| Count[Counter]
-    Count --> Out[Forward to uplink/backend]
-    ACL -->|deny| Drop2[Drop + counter]
-```
+![05. DOCA Flow：网络数据面与硬件转发管线 图 5](assets/05-doca-flow-network-datapath-fig-05.svg)
 
 控制面：
 

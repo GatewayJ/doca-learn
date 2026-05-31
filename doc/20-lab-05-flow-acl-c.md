@@ -131,15 +131,7 @@ ninja -C /tmp/doca_flow_build
 - 每条关键规则带 counter；
 - miss 走 drop 或 slow path，必须明确。
 
-```mermaid
-flowchart LR
-    In[Ingress Port / Representor] --> ACL[ACL Pipe]
-    ACL -->|allow hit| CountAllow[Allow Counter]
-    CountAllow --> Fwd[Forward to Uplink/Queue]
-    ACL -->|deny hit| CountDeny[Deny Counter]
-    CountDeny --> Drop[Drop]
-    ACL -->|miss| Miss[Miss: drop or slow path]
-```
+![20. Lab 05：Flow ACL + Counter（C） 图 1](assets/20-lab-05-flow-acl-c-fig-01.svg)
 
 ## 7. `rules.json` 示例
 

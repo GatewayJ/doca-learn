@@ -31,28 +31,7 @@ NVIDIA 官方 RoCE 文档强调的关键点包括：
 
 ## 3. DOCA RDMA 架构
 
-```mermaid
-flowchart LR
-    subgraph Local[本端]
-        App[DOCA RDMA App]
-        LocalMmap[local doca_mmap]
-        LocalBuf[local doca_buf]
-        RDMAObj[doca_rdma ctx/tasks]
-        NIC[RDMA Engine]
-    end
-
-    subgraph Remote[远端]
-        RemoteApp[Remote App]
-        RemoteMmap[remote registered/exported memory]
-        RemoteBuf[remote buffer]
-        RemoteNIC[Remote RDMA Engine]
-    end
-
-    App --> LocalMmap --> LocalBuf --> RDMAObj --> NIC
-    RemoteApp --> RemoteMmap --> RemoteBuf --> RemoteNIC
-    NIC <-->|RoCE / IB fabric| RemoteNIC
-    App <-->|Comch/socket/RPC exchange metadata| RemoteApp
-```
+![08. DOCA RDMA 与 RoCE：远端内存访问 图 1](assets/08-doca-rdma-and-roce-fig-01.svg)
 
 ## 4. RDMA 的两个核心前提
 
@@ -123,26 +102,7 @@ DOCA RDMA 可能使用 export/connect 或 RDMA CM 等连接流程。无论具体
 
 ## 7. RDMA write 示例流程
 
-```mermaid
-sequenceDiagram
-    participant A as Node A / Initiator
-    participant Ctrl as Control Channel<br/>Comch/socket/RPC
-    participant B as Node B / Target
-    participant Net as RoCE Fabric
-
-    B->>B: allocate target buffer
-    B->>B: register mmap / export RDMA descriptor
-    A->>A: allocate source buffer / register mmap
-    A->>Ctrl: request remote descriptor
-    Ctrl->>B: ask descriptor and connection info
-    B-->>Ctrl: descriptor/key/addr/length
-    Ctrl-->>A: remote memory metadata
-    A->>A: create RDMA write task
-    A->>Net: RDMA write packets
-    Net->>B: NIC writes target memory
-    A-->>A: completion callback
-    A->>Ctrl: notify write done, optional
-```
+![08. DOCA RDMA 与 RoCE：远端内存访问 图 2](assets/08-doca-rdma-and-roce-fig-02.svg)
 
 ## 8. send/recv 与 read/write 的区别
 
@@ -163,12 +123,7 @@ sequenceDiagram
 - Comch 负责交换控制元数据，RDMA 负责数据搬运；
 - DMA 负责 Host↔DPU buffer 搬运，RDMA 负责 DPU↔remote 搬运。
 
-```mermaid
-flowchart LR
-    Host[Host App / NVMe Driver] --> DPU[DPU SNAP / Storage Agent]
-    DPU <-->|DMA / PCIe| HostBuf[Host Buffer]
-    DPU <-->|RDMA / RoCE| Remote[Remote Storage Target]
-```
+![08. DOCA RDMA 与 RoCE：远端内存访问 图 3](assets/08-doca-rdma-and-roce-fig-03.svg)
 
 ## 10. RoCE 调试清单
 

@@ -17,19 +17,7 @@ DOCA Flow、DMA、RDMA、Comch 等库看起来不同，但它们共享一套 Cor
 
 ## 2. 核心对象关系
 
-```mermaid
-flowchart TB
-    DevInfo[doca_devinfo<br/>设备信息/能力查询] --> Dev[doca_dev<br/>打开后的设备]
-    Dev --> Module[模块对象<br/>doca_dma / doca_rdma / doca_comch / ...]
-    Module --> Ctx[doca_ctx<br/>统一上下文]
-    PE[doca_pe<br/>Progress Engine] --> Ctx
-    Mmap[doca_mmap<br/>内存注册/导出] --> BufInv[doca_buf_inventory]
-    BufInv --> Buf[doca_buf<br/>描述一段可访问内存]
-    Ctx --> Task[doca_task<br/>异步任务]
-    Buf --> Task
-    Task --> PE
-    PE --> Callback[完成/错误回调]
-```
+![04. DOCA Core 编程模型 图 1](assets/04-doca-core-programming-model-fig-01.svg)
 
 ## 3. device：先找到能做事的设备
 
@@ -143,16 +131,7 @@ while (!done) {
 
 很多 DOCA ctx 都有类似状态：
 
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> Starting: doca_ctx_start()
-    Starting --> Running: start complete
-    Running --> Stopping: doca_ctx_stop()
-    Stopping --> Idle: stop complete
-    Running --> Stopping: error/reset
-    Idle --> [*]: destroy
-```
+![04. DOCA Core 编程模型 图 2](assets/04-doca-core-programming-model-fig-02.svg)
 
 常见错误是：
 

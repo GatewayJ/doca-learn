@@ -13,33 +13,7 @@ DOCA 不是一个普通文件系统，也不是单纯的磁盘驱动。它在存
 
 SNAP 可以理解为 DPU 上的存储设备仿真/转发服务。
 
-```mermaid
-flowchart LR
-    subgraph Host[Host]
-        App[应用 / 文件系统 / 数据库]
-        Driver[标准 NVMe / virtio 驱动]
-    end
-
-    subgraph DPU[DPU]
-        Emu[SNAP / DevEmu<br/>设备仿真]
-        Agent[Storage Service / Agent]
-        DMA[DMA Host Buffer]
-        Policy[加密/压缩/QoS/Telemetry]
-    end
-
-    subgraph Backend[后端]
-        SPDK[SPDK bdev]
-        NVMeOF[NVMe-oF Target]
-        Custom[自定义存储后端]
-    end
-
-    App --> Driver --> Emu
-    Emu --> Agent --> DMA
-    Agent --> Policy
-    Agent --> SPDK
-    Agent --> NVMeOF
-    Agent --> Custom
-```
+![09. DOCA 存储：SNAP、NVMe、virtio 与后端数据路径 图 1](assets/09-storage-snap-nvme-virtio-fig-01.svg)
 
 Host 看到的是标准设备；DPU 侧决定这个设备背后的真实实现。
 
@@ -74,23 +48,7 @@ NVMe-oF 常把 NVMe 协议跑在 fabrics 上，其中 RDMA 是常见 transport�
 - 数据通过 RDMA/RoCE 在 DPU 与远端存储之间搬运；
 - Host buffer 与 DPU 之间使用 DMA/PCIe 访问。
 
-```mermaid
-sequenceDiagram
-    participant App as Host App
-    participant NVMe as Host NVMe Driver
-    participant SNAP as DPU SNAP
-    participant RDMA as DPU RDMA/NVMe-oF
-    participant Target as Remote NVMe-oF Target
-
-    App->>NVMe: read/write block
-    NVMe->>SNAP: NVMe command via emulated device
-    SNAP->>SNAP: parse command / map namespace
-    SNAP->>RDMA: issue NVMe-oF/RDMA operation
-    RDMA->>Target: transfer data over RoCE
-    Target-->>RDMA: completion/data
-    SNAP-->>NVMe: complete command
-    NVMe-->>App: IO done
-```
+![09. DOCA 存储：SNAP、NVMe、virtio 与后端数据路径 图 2](assets/09-storage-snap-nvme-virtio-fig-02.svg)
 
 ## 6. virtio-blk / virtio-fs
 
@@ -136,19 +94,7 @@ DOCA DevEmu / SNAP virtio-fs 相关文档覆盖这类服务。它们的共同点
 
 设计：
 
-```mermaid
-flowchart TD
-    HostApp[Host DB/FileSystem] --> HostNVMe[Host NVMe Driver]
-    HostNVMe --> SNAP[DPU SNAP NVMe Emulation]
-    SNAP --> Map[Namespace Mapping]
-    Map --> Policy[QoS + Encrypt + Telemetry]
-    Policy --> DMA[DMA Host Buffer Access]
-    Policy --> RDMA[RDMA/NVMe-oF Initiator]
-    RDMA --> Pool[Remote Storage Pool]
-    Controller[Cloud Control Plane] --> DPUAgent[DPU Storage Agent]
-    DPUAgent --> SNAP
-    DPUAgent --> Flow[Flow rules for storage traffic]
-```
+![09. DOCA 存储：SNAP、NVMe、virtio 与后端数据路径 图 3](assets/09-storage-snap-nvme-virtio-fig-03.svg)
 
 关键问题：
 

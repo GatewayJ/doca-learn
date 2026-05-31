@@ -25,25 +25,7 @@ DOCA 系统里通常有三类执行者：
 
 以“Host 让 DPU 为某个租户创建网络规则”为例：
 
-```mermaid
-sequenceDiagram
-    participant HostApp as Host 控制面应用
-    participant Comch as DOCA Comch / RPC
-    participant Agent as DPU Agent
-    participant Flow as DOCA Flow API
-    participant HW as NIC/DPU 硬件管线
-    participant Packet as 后续数据包
-
-    HostApp->>Comch: 发送创建规则请求
-    Comch->>Agent: DPU 侧收到控制消息
-    Agent->>Agent: 校验租户/端口/权限/策略
-    Agent->>Flow: 创建 pipe / entry / action / forward
-    Flow->>HW: 下发 match-action 规则
-    HW-->>Agent: 规则安装结果
-    Agent-->>HostApp: 返回成功/失败
-    Packet->>HW: 后续数据包进入
-    HW->>HW: 硬件匹配、转发、计数、修改
-```
+![03. 架构与卸载原理：Host、DPU ARM、硬件快路径如何分工 图 1](assets/03-architecture-and-offload-principles-fig-01.svg)
 
 注意：控制消息走软件；规则安装之后，符合规则的数据包走硬件。
 
@@ -83,14 +65,7 @@ DMA、RDMA、crypto、compress、regex/erasure coding 等能力属于“任务�
 
 SNAP/DevEmu 这类场景更复杂：Host 看到一个标准设备，DPU 侧模拟设备行为并把请求转到后端。
 
-```mermaid
-flowchart LR
-    Host[Host OS<br/>标准 NVMe/virtio 驱动] --> Emu[PCIe 设备仿真<br/>SNAP/DevEmu]
-    Emu --> DPU[DPU 侧服务]
-    DPU --> Backend1[本地 SPDK bdev]
-    DPU --> Backend2[远端 NVMe-oF/RDMA]
-    DPU --> Backend3[自定义存储后端]
-```
+![03. 架构与卸载原理：Host、DPU ARM、硬件快路径如何分工 图 2](assets/03-architecture-and-offload-principles-fig-02.svg)
 
 ## 5. 关键模块在架构中的位置
 
@@ -106,36 +81,11 @@ flowchart LR
 
 ## 6. 数据路径示例：网络包
 
-```mermaid
-flowchart LR
-    Wire[物理网络包] --> Parser[硬件 Parser]
-    Parser --> Match[匹配 pipe/entry]
-    Match -->|命中| Action[硬件 action<br/>modify/drop/count/forward]
-    Action --> Out[转发到 uplink / representor / queue]
-    Match -->|未命中/异常| Slow[DPU ARM 或 Host 慢路径]
-    Slow --> Update[安装新规则或丢弃/上报]
-    Update --> Match
-```
+![03. 架构与卸载原理：Host、DPU ARM、硬件快路径如何分工 图 3](assets/03-architecture-and-offload-principles-fig-03.svg)
 
 ## 7. 数据路径示例：RDMA write
 
-```mermaid
-sequenceDiagram
-    participant Local as 本端 DOCA RDMA App
-    participant LocalNIC as 本端 RDMA 引擎
-    participant Net as RoCE 网络
-    participant RemoteNIC as 远端 RDMA 引擎
-    participant Mem as 远端已注册内存
-
-    Local->>Local: 注册/导出本地内存，获得 remote descriptor
-    Local->>Local: 通过 Comch/socket/RPC 交换连接和内存信息
-    Local->>LocalNIC: 提交 RDMA write task
-    LocalNIC->>Net: 发送 RDMA write packet
-    Net->>RemoteNIC: 转发到远端 NIC/DPU
-    RemoteNIC->>Mem: 写入远端内存
-    RemoteNIC-->>LocalNIC: completion/ack 取决于操作语义
-    LocalNIC-->>Local: completion callback/event
-```
+![03. 架构与卸载原理：Host、DPU ARM、硬件快路径如何分工 图 4](assets/03-architecture-and-offload-principles-fig-04.svg)
 
 ## 8. 判断一个 DOCA 设计是否合理
 
