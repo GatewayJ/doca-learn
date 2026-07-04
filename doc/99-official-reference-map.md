@@ -2,11 +2,13 @@
 
 本页记录本系列当前引用过的官方文档入口，方便后续继续扩展。
 
+最后核对时间：2026-07-04。当前官方文档入口已更新到 DOCA 3.4.0；具体模块 API、包名和工具路径仍应以安装环境中的版本为准。
+
 ## 1. 总入口与入门
 
 | 主题 | 链接 | 用途 |
 |---|---|---|
-| DOCA Documentation v3.3.0 | <https://docs.nvidia.com/doca/sdk/index.html> | 总目录、版本、模块入口 |
+| DOCA Documentation v3.4.0 | <https://networking-docs.nvidia.com/doca/archive/3-4-0> | 总目录、版本、模块入口 |
 | DOCA Developer Quick Start Guide | <https://docs.nvidia.com/doca/sdk/DOCA-Developer-Quick-Start-Guide/index.html> | 安装、访问 BlueField、运行参考应用 |
 | Quick Start for BlueField Developers | <https://docs.nvidia.com/doca/sdk/Quick-Start-for-BlueField-Developers/index.html> | BlueField 开发者快速开始 |
 | NVIDIA DOCA Developer Page | <https://developer.nvidia.com/doca> | 产品与下载入口 |
@@ -138,6 +140,24 @@
 
 ## 9. 本系列补充文档与后续扩展
 
+### 9.1 当前覆盖状态
+
+| 主题 | 覆盖状态 | 说明 |
+|---|---|---|
+| 平台组成、运行环境 | 已覆盖 | 01、02 解释 DOCA、BlueField/SuperNIC、Host/DPU、SDK/driver/firmware/services 的关系。 |
+| Core 编程模型 | 已覆盖 | 04 和 lab 章节覆盖 device、mmap、buffer、ctx、task、PE、callback、生命周期。 |
+| Flow 数据面 | 已覆盖 | 05 和 Lab 05 覆盖 pipe、entry、match-action、counter、miss path、representor。 |
+| Comch 控制通道 | 已覆盖 | 06 和 Lab 03 覆盖 Host-DPU 控制消息、连接状态、协议设计。 |
+| DMA / RDMA / RoCE | 已覆盖 | 07、08、Lab 02、Lab 04 覆盖本地复制、远端访问、队列、RoCE 排障入口。 |
+| SNAP / Storage / NVMe / virtio | 浅覆盖 | 09 覆盖架构和概念；NVMe Emulation、SNAP Virtio-fs、SNAP 服务部署还需要独立深入。 |
+| 安全、加密、遥测、运维 | 浅覆盖 | 10 覆盖入口；App Shield、IPsec/PSP、Telemetry Exporter、Flow Inspector 可继续展开。 |
+| DPA / FlexIO / DPACC | 未展开 | 当前只在平台图谱和官方索引中出现；需要单独解释 DPA 不是通用 ARM CPU，而是受 Host/DPU 进程管理的 datapath 加速执行环境。 |
+| GPUNetIO | 未展开 | 只在少数章节提到；需要解释 GPU 直接处理网络包、GPUDirect RDMA、GPU-centric datapath。 |
+| PCC / 拥塞控制 | 未展开 | 当前只做名词级提及；需要解释“什么时候需要 PCC、它和 RoCE/拥塞控制的关系”。 |
+| DPL / Pipeline Language | 未展开 | 当前尚未覆盖；DOCA 3.4 已包含 Pipeline Language 相关 service、tool 和参考应用。 |
+| DOCA ETH / DOCA Verbs / UROM / RMAX | 进阶未展开 | 属于进阶模块，建议先放入路线图，再按读者兴趣展开。 |
+| HBN / BlueMan / Management / Time Sync / Ngauge | 进阶未展开 | 更偏运维、平台管理和生产化工具，可放在后续 runbook。 |
+
 本系列已经新增三份横向参考文档：
 
 - [13-performance-tuning-and-troubleshooting.md](13-performance-tuning-and-troubleshooting.md)：性能调优、压测方法和开发排障手册；
@@ -153,12 +173,18 @@
 - [19-lab-04-rdma-write-read-c.md](19-lab-04-rdma-write-read-c.md)：RDMA write/read 实验步骤；
 - [20-lab-05-flow-acl-c.md](20-lab-05-flow-acl-c.md)：Flow ACL + counter 实验。
 
+### 9.2 建议后续新增文档
+
 后续可以继续新增更偏进阶/生产化的文档：
 
-1. `21-roce-debugging-runbook.md`：RoCE 网络排障手册；
-2. `22-production-checklist.md`：生产化检查清单；
-3. `23-cpp-raii-wrapper.md`：C++ RAII 封装设计；
-4. `24-control-plane-service.md`：Go/Rust/Python 外围控制面设计。
+1. `21-doca-dpa-flexio-programming-model.md`：DPA / FlexIO / DPACC 编程模型；
+2. `22-doca-gpunetio-gpu-packet-processing.md`：GPUNetIO 与 GPU 直接处理网络包；
+3. `23-doca-snap-nvme-emulation-deep-dive.md`：SNAP、NVMe Emulation 与 virtio 设备仿真深入；
+4. `24-doca-pipeline-language-and-flow.md`：DPL / Pipeline Language 与 DOCA Flow 的关系；
+5. `25-roce-debugging-runbook.md`：RoCE 网络排障手册；
+6. `26-production-checklist.md`：生产化检查清单；
+7. `27-cpp-raii-wrapper.md`：C++ RAII 封装设计；
+8. `28-control-plane-service.md`：Go/Rust/Python 外围控制面设计。
 
 ## 10. 官方文档阅读方法
 

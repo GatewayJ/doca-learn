@@ -79,11 +79,13 @@ Flow 不是无限灵活的通用程序执行环境，它受硬件 steering 能�
 
 - 支持哪些 match 字段；
 - 支持哪些 action；
-- pipe 类型和 domain；
+- pipe 类型、domain、port/representor 路径；
 - 表项规模；
 - aging/counter/meter 限制；
 - RSS/queue/port/hairpin 限制；
 - VNF mode / switch mode 差异。
+
+> 版本提醒：较新的 DOCA Flow 版本已经移除了早期显式设置 flow direction 的 API。学习时可以把“方向”理解成流量所在的 domain、port、representor 和转发路径选择，不要把它等同于一个固定的 direction 配置项。
 
 开发前要查：
 
@@ -137,7 +139,7 @@ Flow 不是无限灵活的通用程序执行环境，它受硬件 steering 能�
 
 | 名词 | 解释 |
 |---|---|
-| Steering domain | Flow 规则所在的转发域/方向；不同模式下 domain 支持不同。 |
+| Steering domain | Flow 规则所在的转发域和端口路径选择；不同模式下 domain、port、representor 支持不同。 |
 | Pipe chaining | 一个 pipe 命中后转到下一个 pipe，用多级表减少规则重复。 |
 | Priority | 多条规则都可能匹配时的优先级控制。 |
 | Shared resource | 多个 entry 共享 counter/meter/action 等资源。 |
@@ -159,7 +161,7 @@ Flow 不是无限灵活的通用程序执行环境，它受硬件 steering 能�
 
 | 现象 | 可能原因 | 排查 |
 |---|---|---|
-| 无流量命中 | representor/uplink/port 选错，domain 方向错 | counter、抓包、Flow Inspector、`doca_caps --list-rep-devs` |
+| 无流量命中 | representor/uplink/port 选错，domain 或路径选择不匹配 | counter、抓包、Flow Inspector、`doca_caps --list-rep-devs` |
 | 规则无法创建 | match/action 组合不支持或资源不足 | 查 capability、减少 action、拆 pipe |
 | 命中了但转发错 | fwd 目标或 miss 目标设置错 | 给每段 pipe 加 counter，画实际路径 |
 | 性能随规则数下降 | 表结构不合理或硬件资源接近上限 | 多级 pipe、优先级压缩、减少细粒度规则 |

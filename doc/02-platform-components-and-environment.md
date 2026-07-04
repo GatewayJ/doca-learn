@@ -45,6 +45,8 @@ DOCA 应用依赖底层驱动、固件、RDMA/网络栈。实际开发前必须�
 - RDMA core、ibverbs、RoCE 配置；
 - 设备模式：DPU mode、NIC mode、embedded mode 等。
 
+> 版本提醒：DOCA-Host、DOCA-OFED、Open vSwitch 相关包名和 profile 会随版本变化。例如 DOCA 3.1 以后官方已把 DOCA-OFED profile 中的 `openvswitch` 替换为 `doca-openvswitch`。实际安装时以当前版本 release note 和 compatibility matrix 为准。
+
 ### 3.3 DOCA Services
 
 除 SDK 外，DOCA 还有服务/工具形态，例如：

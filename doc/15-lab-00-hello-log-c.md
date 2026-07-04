@@ -280,6 +280,6 @@ find /opt/mellanox/doca -name "doca_log.h" 2>/dev/null
 
 DOCA 版本、OS、安装方式不同，include/lib/pkg-config 都可能不同。实验 README 应记录“本机实际参数”，不要把它当作所有机器通用配置。
 
-## 12. 下一步
+## 14. 下一步
 
 继续阅读：[16. Lab 01：Capabilities Python 环境探测](16-lab-01-caps-python.md)。
