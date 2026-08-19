@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">DPACC compilation and DPA runtime flow</title>
+  <desc id="desc">DPACC compiles DPA C source to device executable and generated host stubs. They form a DPA program linked with control code and loaded into a DPA process.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1e293b; }
+      .title { font-size: 22px; font-weight: 700; }
+      .label { font-size: 17px; font-weight: 650; }
+      .small { font-size: 14px; fill: #475569; }
+      .box { stroke-width: 2; rx: 14; }
+      .line { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1200" height="400" fill="#f8fafc" rx="18"/>
+  <text x="600" y="40" text-anchor="middle" class="title">DPACC separates control code from DPA device code</text>
+
+  <rect x="40" y="90" width="230" height="100" class="box" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="155" y="126" text-anchor="middle" class="label">DPA C source</text>
+  <text x="155" y="153" text-anchor="middle" class="small">global / RPC entry points</text>
+
+  <rect x="360" y="90" width="200" height="100" class="box" fill="#fff7ed" stroke="#f97316"/>
+  <text x="460" y="126" text-anchor="middle" class="label">DPACC</text>
+  <text x="460" y="153" text-anchor="middle" class="small">DPA compiler + stub generator</text>
+
+  <rect x="650" y="65" width="230" height="80" class="box" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="765" y="99" text-anchor="middle" class="label">Device executable</text>
+  <text x="765" y="123" text-anchor="middle" class="small">ELF / fatbinary</text>
+  <rect x="650" y="175" width="230" height="80" class="box" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="765" y="209" text-anchor="middle" class="label">Generated Host stubs</text>
+  <text x="765" y="233" text-anchor="middle" class="small">application interface</text>
+
+  <rect x="950" y="105" width="210" height="110" class="box" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="1055" y="140" text-anchor="middle" class="label">DPA program</text>
+  <text x="1055" y="167" text-anchor="middle" class="small">Host-linkable library</text>
+  <text x="1055" y="190" text-anchor="middle" class="small">encapsulates device code</text>
+
+  <rect x="650" y="285" width="230" height="75" class="box" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="765" y="317" text-anchor="middle" class="label">Control application</text>
+  <text x="765" y="341" text-anchor="middle" class="small">DOCA DPA or FlexIO runtime</text>
+  <rect x="930" y="285" width="230" height="75" class="box" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="1045" y="317" text-anchor="middle" class="label">DPA process</text>
+  <text x="1045" y="341" text-anchor="middle" class="small">loaded device application</text>
+
+  <path d="M270 140 H360" class="line"/>
+  <path d="M560 120 H650" class="line"/>
+  <path d="M560 160 C600 160 610 215 650 215" class="line"/>
+  <path d="M880 105 C920 105 920 135 950 145" class="line"/>
+  <path d="M880 215 C920 215 920 185 950 175" class="line"/>
+  <path d="M1055 215 V260 H765 V285" class="line"/>
+  <text x="920" y="250" text-anchor="middle" class="small">link application library</text>
+  <path d="M880 322 H930" class="line"/>
+  <text x="905" y="307" text-anchor="middle" class="small">load</text>
+</svg>

@@ -43,6 +43,8 @@ DOCA 可以粗略理解为：
 
 ## 2. 推荐学习顺序
 
+> 下列数字表示阅读步骤；链接文件名开头的两位数字才是章节编号。
+
 ### 第一阶段：理解平台
 
 1. [DOCA 是什么与应用场景](01-what-is-doca-and-use-cases.md)
@@ -81,10 +83,17 @@ DOCA 可以粗略理解为：
 19. [Lab 03：Comch Host/DPU 控制通道（C）](18-lab-03-comch-host-dpu-c.md)
 20. [Lab 04：RDMA Write/Read（C）](19-lab-04-rdma-write-read-c.md)
 21. [Lab 05：Flow ACL + Counter（C）](20-lab-05-flow-acl-c.md)
-22. [DOCA 技术术语表](98-technical-glossary.md)
-23. [官方文档索引](99-official-reference-map.md)
 
 这一阶段的目标：能在真实 BlueField/SuperNIC 环境中检查能力、跑通官方参考应用，设计 Host↔DPU↔Remote 的基础设施数据通路，明确后续代码实验的 C/Python/C++/Go/Rust 分工，并按 Lab 00-05 逐步完成从日志、环境探测、DMA、Comch、RDMA 到 Flow ACL 的实验路线。
+
+### 第五阶段：近数据路径与 GPU 数据面
+
+22. [DPA、FlexIO 与 DPACC 编程模型](21-doca-dpa-flexio-programming-model.md)
+23. [GPUNetIO 与 GPU 直接处理网络包](22-doca-gpunetio-gpu-packet-processing.md)
+24. [DOCA 技术术语表](98-technical-glossary.md)
+25. [官方文档索引](99-official-reference-map.md)
+
+这一阶段的目标：理解 DPA 的事件驱动近数据路径执行，以及 GPUNetIO 如何让 CUDA kernel 直接推进 Ethernet、RDMA 和 DMA 数据面。
 
 ## 3. 贯穿全系列的学习问题
 

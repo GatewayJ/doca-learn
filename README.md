@@ -38,6 +38,8 @@
 - [18-lab-03-comch-host-dpu-c.md](doc/18-lab-03-comch-host-dpu-c.md) — Lab 03：Comch Host/DPU 控制通道（C）
 - [19-lab-04-rdma-write-read-c.md](doc/19-lab-04-rdma-write-read-c.md) — Lab 04：RDMA Write/Read（C）
 - [20-lab-05-flow-acl-c.md](doc/20-lab-05-flow-acl-c.md) — Lab 05：Flow ACL + Counter（C）
+- [21-doca-dpa-flexio-programming-model.md](doc/21-doca-dpa-flexio-programming-model.md) — DPA、FlexIO 与 DPACC 编程模型
+- [22-doca-gpunetio-gpu-packet-processing.md](doc/22-doca-gpunetio-gpu-packet-processing.md) — GPUNetIO 与 GPU 直接处理网络包
 - [98-technical-glossary.md](doc/98-technical-glossary.md) — DOCA 技术术语表
 - [99-official-reference-map.md](doc/99-official-reference-map.md) — 官方文档索引与后续扩展路线
 
