@@ -304,8 +304,10 @@ metric: pps, Gbps, counter accuracy, insert/delete rate
 
 完成本实验后，可以继续扩展：
 
-- `21-roce-debugging-runbook.md`：单独整理 RoCE 排障；
-- `22-production-checklist.md`：生产化 checklist；
+- [21. DPA、FlexIO 与 DPACC 编程模型](21-doca-dpa-flexio-programming-model.md)；
+- [22. GPUNetIO 与 GPU 直接处理网络包](22-doca-gpunetio-gpu-packet-processing.md)；
+- `25-roce-debugging-runbook.md`：后续单独整理 RoCE 排障；
+- `26-production-checklist.md`：后续补充生产化 checklist；
 - 或开始真正创建 `labs/` 代码骨架。
 
 建议回看：[14. DOCA 代码实验语言选择与项目布局](14-code-lab-language-and-layout.md)。

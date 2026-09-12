@@ -151,17 +151,19 @@
 | DMA / RDMA / RoCE | 已覆盖 | 07、08、Lab 02、Lab 04 覆盖本地复制、远端访问、队列、RoCE 排障入口。 |
 | SNAP / Storage / NVMe / virtio | 浅覆盖 | 09 覆盖架构和概念；NVMe Emulation、SNAP Virtio-fs、SNAP 服务部署还需要独立深入。 |
 | 安全、加密、遥测、运维 | 浅覆盖 | 10 覆盖入口；App Shield、IPsec/PSP、Telemetry Exporter、Flow Inspector 可继续展开。 |
-| DPA / FlexIO / DPACC | 未展开 | 当前只在平台图谱和官方索引中出现；需要单独解释 DPA 不是通用 ARM CPU，而是受 Host/DPU 进程管理的 datapath 加速执行环境。 |
-| GPUNetIO | 未展开 | 只在少数章节提到；需要解释 GPU 直接处理网络包、GPUDirect RDMA、GPU-centric datapath。 |
+| DPA / FlexIO / DPACC | 已覆盖 | 21 解释 DPA 执行位置、DOCA DPA/FlexIO 分层、DPACC 编译模型、内存、事件、队列与生命周期。 |
+| GPUNetIO | 已覆盖 | 22 解释 GPUDirect RDMA 与 GDAKI 的区别、CPU/GPU 分工、Ethernet/RDMA/DMA 数据路径、内存映射与拓扑。 |
 | PCC / 拥塞控制 | 未展开 | 当前只做名词级提及；需要解释“什么时候需要 PCC、它和 RoCE/拥塞控制的关系”。 |
 | DPL / Pipeline Language | 未展开 | 当前尚未覆盖；DOCA 3.4 已包含 Pipeline Language 相关 service、tool 和参考应用。 |
 | DOCA ETH / DOCA Verbs / UROM / RMAX | 进阶未展开 | 属于进阶模块，建议先放入路线图，再按读者兴趣展开。 |
 | HBN / BlueMan / Management / Time Sync / Ngauge | 进阶未展开 | 更偏运维、平台管理和生产化工具，可放在后续 runbook。 |
 
-本系列已经新增三份横向参考文档：
+本系列已经新增五份进阶与横向参考文档：
 
 - [13-performance-tuning-and-troubleshooting.md](13-performance-tuning-and-troubleshooting.md)：性能调优、压测方法和开发排障手册；
 - [14-code-lab-language-and-layout.md](14-code-lab-language-and-layout.md)：代码实验语言选择、labs 目录布局、C/Python/C++/Go/Rust 分工；
+- [21-doca-dpa-flexio-programming-model.md](21-doca-dpa-flexio-programming-model.md)：DPA、DOCA DPA、FlexIO 与 DPACC 的编译和运行模型；
+- [22-doca-gpunetio-gpu-packet-processing.md](22-doca-gpunetio-gpu-packet-processing.md)：GPUNetIO 的 GPU-centric 网络、内存、队列与性能验证；
 - [98-technical-glossary.md](98-technical-glossary.md)：DOCA/Flow/Comch/DMA/RDMA/SNAP/RoCE 等术语集中解释。
 
 本系列已经新增代码实验章节：
@@ -177,14 +179,12 @@
 
 后续可以继续新增更偏进阶/生产化的文档：
 
-1. `21-doca-dpa-flexio-programming-model.md`：DPA / FlexIO / DPACC 编程模型；
-2. `22-doca-gpunetio-gpu-packet-processing.md`：GPUNetIO 与 GPU 直接处理网络包；
-3. `23-doca-snap-nvme-emulation-deep-dive.md`：SNAP、NVMe Emulation 与 virtio 设备仿真深入；
-4. `24-doca-pipeline-language-and-flow.md`：DPL / Pipeline Language 与 DOCA Flow 的关系；
-5. `25-roce-debugging-runbook.md`：RoCE 网络排障手册；
-6. `26-production-checklist.md`：生产化检查清单；
-7. `27-cpp-raii-wrapper.md`：C++ RAII 封装设计；
-8. `28-control-plane-service.md`：Go/Rust/Python 外围控制面设计。
+1. `23-doca-snap-nvme-emulation-deep-dive.md`：SNAP、NVMe Emulation 与 virtio 设备仿真深入；
+2. `24-doca-pipeline-language-and-flow.md`：DPL / Pipeline Language 与 DOCA Flow 的关系；
+3. `25-roce-debugging-runbook.md`：RoCE 网络排障手册；
+4. `26-production-checklist.md`：生产化检查清单；
+5. `27-cpp-raii-wrapper.md`：C++ RAII 封装设计；
+6. `28-control-plane-service.md`：Go/Rust/Python 外围控制面设计。
 
 ## 10. 官方文档阅读方法
 
